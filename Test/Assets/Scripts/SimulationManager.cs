@@ -25,7 +25,7 @@ public class SimulationManager : MonoBehaviour
             {
                 if (hit)
                 {
-                    _departurePosition = Instantiate(_departurePosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.125f, hitInfo.point.z), Quaternion.identity) as GameObject;
+                    _departurePosition = Instantiate(_departurePosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z), Quaternion.identity) as GameObject;
                     _projectile = Instantiate(_projectile, _departurePosition.transform.position, Quaternion.identity);
                     _projectile.SetActive(false);
                     _instantiateCount += 1;
@@ -35,7 +35,7 @@ public class SimulationManager : MonoBehaviour
             {
                 if (hit)
                 {
-                    _arrivalPosition = Instantiate(_arrivalPosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.125f, hitInfo.point.z), Quaternion.identity) as GameObject;
+                    _arrivalPosition = Instantiate(_arrivalPosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z), Quaternion.identity) as GameObject;
                     _projectile.SetActive(true);
                     _instantiateCount = 0;
                     _instantiatable = false;
