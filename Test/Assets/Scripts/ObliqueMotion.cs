@@ -15,6 +15,7 @@ public class ObliqueMotion : MonoBehaviour
     private float _projectileVelocity;
     private float _vX;
     private float _vY;
+    private bool _isMoving = false;
     
     public int speed = 0;
     public int hMax = 0;
@@ -45,7 +46,6 @@ public class ObliqueMotion : MonoBehaviour
     {
         // Short delay added before Projectile is thrown
         yield return new WaitForSeconds(1.25f);
-
         // Move projectile to the position of throwing object + add some offset if needed.
         transform.position = departurePosition.position + new Vector3(0, 0, 0);
 
@@ -69,11 +69,11 @@ public class ObliqueMotion : MonoBehaviour
 
         while (elapseTime < flightDuration)
         {
+            _isMoving = true;
             transform.Translate(0, (_vY - (gravity * speed) * elapseTime) * Time.deltaTime, _vX * Time.deltaTime);
-
             elapseTime += Time.deltaTime;
-
             yield return null;
+            _isMoving = false;
         }
     }
 
@@ -91,7 +91,10 @@ public class ObliqueMotion : MonoBehaviour
 
     private void GetDatasFromUI()
     {
-        hMax = uiController.uiHmax;
-        speed = uiController.uiSpeed;
+        if (!_isMoving)
+        {
+            hMax = uiController.uiHmax;
+            speed = uiController.uiSpeed;
+        }
     }
 }
