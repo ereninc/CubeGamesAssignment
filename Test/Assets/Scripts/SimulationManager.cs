@@ -26,7 +26,7 @@ public class SimulationManager : MonoBehaviour
                 if (hit)
                 {
                     _departurePosition = Instantiate(_departurePosition, hitInfo.point, Quaternion.identity) as GameObject;
-                    _projectile = Instantiate(_projectile, new Vector3(_departurePosition.transform.position.x, _departurePosition.transform.position.y + 0.25f, _departurePosition.transform.position.z), Quaternion.identity);
+                    _projectile = Instantiate(_projectile, _departurePosition.transform.position, Quaternion.identity);
                     _projectile.SetActive(false);
                     _instantiateCount += 1;
                 }
@@ -52,5 +52,10 @@ public class SimulationManager : MonoBehaviour
     public Vector3 GetArrivalPosition()
     {
         return _arrivalPosition.transform.position;
+    }
+
+    public Vector3 GetProjectilePosition()
+    {
+        return _projectile.transform.position;
     }
 }

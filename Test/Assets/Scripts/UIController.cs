@@ -1,27 +1,23 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    [SerializeField] private GameObject _interface;
-    [SerializeField] private GameObject _showButton;
+    [SerializeField] private GameObject uiMenu;
+    [SerializeField] private GameObject showButton;
+    [SerializeField] private Text departurePosText;
+    [SerializeField] private Text arrivalPosText;
+    [SerializeField] private Text projectilePosText;
+    [SerializeField] private Text hMaxText;
+    [SerializeField] private Text speedText;
 
-    [SerializeField] private SimulationManager _simulationManager;
-    [SerializeField] private Text _departurePosText;
-    [SerializeField] private Text _arrivalPosText;
+    [SerializeField] private SimulationManager simulationManager;
+    [SerializeField] private ObliqueMotion obliqueMotion;
 
-    [SerializeField] private Text _hMaxText;
-    [SerializeField] private Text _speed;
-
-    public int maxHeight = 10;
-    public int speed = 1;
-
-    private void Awake()
-    {
-        SetMaximumHeight();
-        SetSpeed();
-    }
+    public int uiHmax;
+    public int uiSpeed;
 
     private void Start()
     {
@@ -30,55 +26,59 @@ public class UIController : MonoBehaviour
 
     private void Update()
     {
-        SetCoordinates();
+        SetCoordinateTexts();
         SetHeightSpeedTexts();
+        
         SetMaximumHeight();
         SetSpeed();
-        Debug.Log("degisken : " + maxHeight + " - textbox : " + _hMaxText.text);
-        Debug.Log("degisken : " + speed + " - textbox : " + _speed.text);
     }
 
     public void ShowUI()
     {
-        _interface.SetActive(true);
-        _showButton.SetActive(false);
+        uiMenu.SetActive(true);
+        showButton.SetActive(false);
     }
 
     public void HideUI()
     {
-        _interface.SetActive(false);
-        _showButton.SetActive(true);
+        uiMenu.SetActive(false);
+        showButton.SetActive(true);
     }
 
     private void SetHeightSpeedTexts()
     {
-        _hMaxText.text = maxHeight.ToString();
-        _speed.text = speed.ToString();
+        hMaxText.text = obliqueMotion.hMax.ToString();
+        speedText.text = obliqueMotion.speed.ToString();
     }
 
-    private void SetCoordinates()
+    private void SetCoordinateTexts()
     {
-        _departurePosText.text = _simulationManager.GetDeparturePosition().ToString();
-        _arrivalPosText.text = _simulationManager.GetArrivalPosition().ToString();
+        departurePosText.text = simulationManager.GetDeparturePosition().ToString();
+        arrivalPosText.text = simulationManager.GetArrivalPosition().ToString();
+        projectilePosText.text = simulationManager.GetProjectilePosition().ToString();
     }
 
-    private int SetMaximumHeight()
+    private void SetMaximumHeight()
     {
-        int.TryParse(_hMaxText.text, out maxHeight);
-        if (maxHeight < 0)
+        if (int.Parse(hMaxText.text) <= 0 || hMaxText.text == null)
         {
-            maxHeight = 10;
+            uiHmax = 10;
         }
-        return maxHeight;
+        else
+        {
+            int.TryParse(hMaxText.text, out uiHmax);
+        }
     }
 
-    private int SetSpeed()
+    private void SetSpeed()
     {
-        int.TryParse(_speed.text, out speed);
-        if (speed < 0)
+        if (int.Parse(speedText.text) <= 0 || speedText.text == null)
         {
-            speed = 1;
+            uiSpeed = 1;
         }
-        return speed;
+        else
+        {
+            int.TryParse(speedText.text, out uiSpeed);
+        }
     }
 }
