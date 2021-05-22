@@ -52,7 +52,7 @@ public class CameraController : MonoBehaviour
     private readonly CameraState m_InterpolatingCameraState = new CameraState();
 
     [Header("Movement Settings")]
-    [Tooltip("Exponential boost factor on translation, controllable by mouse wheel.")]
+    [Tooltip("Exponential boost factor on translation, can be controlled by mouse wheel.")]
     public float boost = 3.5f;
 
     [Tooltip("Time it takes to interpolate camera position 99% of the way to the target."), Range(0.001f, 1f)]
