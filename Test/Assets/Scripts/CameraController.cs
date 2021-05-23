@@ -65,7 +65,7 @@ public class CameraController : MonoBehaviour
     [Tooltip("X = Change in mouse position.\nY = Multiplicative factor for camera rotation.")]
     public AnimationCurve mouseSensitivityCurve = new AnimationCurve(new Keyframe(0f, 0.5f, 0f, 5f), new Keyframe(1f, 2.5f, 0f, 0f));
 
-    [Tooltip("Time it takes to interpolate camera rotation 99% of the way to the target."), Range(0.001f, 1f)]
+    [Tooltip("Time that takes to interpolate camera rotation 99% of the way to the target."), Range(0.001f, 1f)]
     public float rotationLerpTime = 0.01f;
 
     [Tooltip("Whether or not to invert our Y axis for mouse input to rotation.")]
@@ -116,6 +116,7 @@ public class CameraController : MonoBehaviour
 			UnityEditor.EditorApplication.isPlaying = false; 
 			#endif
         }
+        
         // Hide and lock cursor when right mouse button pressed
         if (Input.GetMouseButtonDown(1))
         {

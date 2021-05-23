@@ -52,24 +52,28 @@ public class ObliqueMotion : MonoBehaviour
 
     IEnumerator SimulateProjectile()
     {
-        _isFinished = false;
-        transform.position = departurePosition.position + new Vector3(0, 0, 0); //Xo, Yo, Zo
-        _distance = Vector3.Distance(transform.position, arrivalPosition.position); //X1, Y1, Z1
-        _projectileVelocity = _distance / (Mathf.Sin(2 * _angle * Mathf.Deg2Rad) / (Gravity * speed)); //Vo
-        _vX = Mathf.Sqrt(_projectileVelocity) * Mathf.Cos(_angle * Mathf.Deg2Rad); //Vox
-        _vY = Mathf.Sqrt(_projectileVelocity) * Mathf.Sin(_angle * Mathf.Deg2Rad); //Voy
-        float flightDuration = _distance / _vX; //Tflight
-        transform.rotation = Quaternion.LookRotation(arrivalPosition.position - transform.position);
-        float deltaTime = 0;
-        while (deltaTime < flightDuration)
+        for (;;)
         {
-            isMoving = true;
+            yield return new WaitForSeconds(0.25f);
             _isFinished = false;
-            transform.Translate(0, (_vY - (Gravity * speed) * deltaTime) * Time.deltaTime, _vX * Time.deltaTime);
-            deltaTime += Time.deltaTime;
-            yield return null;
-            isMoving = false;
-            _isFinished = true;
+            transform.position = departurePosition.position + new Vector3(0, 0, 0); //Xo, Yo, Zo
+            _distance = Vector3.Distance(transform.position, arrivalPosition.position); //X1, Y1, Z1
+            _projectileVelocity = _distance / (Mathf.Sin(2 * _angle * Mathf.Deg2Rad) / (Gravity * speed)); //Vo
+            _vX = Mathf.Sqrt(_projectileVelocity) * Mathf.Cos(_angle * Mathf.Deg2Rad); //Vox
+            _vY = Mathf.Sqrt(_projectileVelocity) * Mathf.Sin(_angle * Mathf.Deg2Rad); //Voy
+            float flightDuration = _distance / _vX; //Tflight
+            transform.rotation = Quaternion.LookRotation(arrivalPosition.position - transform.position);
+            float deltaTime = 0;
+            while (deltaTime < flightDuration)
+            {
+                isMoving = true;
+                _isFinished = false;
+                transform.Translate(0, (_vY - (Gravity * speed) * deltaTime) * Time.deltaTime, _vX * Time.deltaTime);
+                deltaTime += Time.deltaTime;
+                yield return null;
+                isMoving = false;
+                _isFinished = true;
+            } 
         }
     }
 
@@ -77,10 +81,12 @@ public class ObliqueMotion : MonoBehaviour
     {
         if (_isFinished)
         {
-            transform.gameObject.SetActive(false);
+            //transform.gameObject.SetActive(false);
             transform.position = departurePosition.position;
             isMoving = false;
         }
+        _isFinished = true;
+        isMoving = true;
     }
 
     private Transform FindArrivalTransform()

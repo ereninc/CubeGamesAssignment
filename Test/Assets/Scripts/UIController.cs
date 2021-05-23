@@ -11,6 +11,9 @@ public class UIController : MonoBehaviour
     [SerializeField] private Text projectilePosText;
     [SerializeField] private Text hMaxText;
     [SerializeField] private Text speedText;
+    [SerializeField] private Text poolCount;
+    [SerializeField] private Text activeObjects;
+    [SerializeField] private Text infoText;
 
     [SerializeField] private SimulationManager simulationManager;
     [SerializeField] private ObliqueMotion obliqueMotion;
@@ -30,6 +33,8 @@ public class UIController : MonoBehaviour
         
         SetMaximumHeight();
         SetSpeed();
+        SetActiveProjectileText();
+        SetPoolCountText();
     }
 
     public void ShowUI()
@@ -79,6 +84,24 @@ public class UIController : MonoBehaviour
         {
             int.TryParse(speedText.text, out uiSpeed);
         }
+    }
+
+    private void SetPoolCountText()
+    {
+        poolCount.text = simulationManager.GetPoolCount().ToString();
+        if (simulationManager.GetPoolCount() > 16)
+        {
+            infoText.text = "8 more created!";
+        }
+        else
+        {
+            infoText.text = "";
+        }
+    }
+
+    private void SetActiveProjectileText()
+    {
+        activeObjects.text = simulationManager.GetActiveProjectiles().ToString();
     }
 
     public void Restart()

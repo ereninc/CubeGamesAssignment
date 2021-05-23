@@ -5,13 +5,12 @@ using UnityEngine.EventSystems;
 
 public class SimulationManager : MonoBehaviour
 {
-    [SerializeField] private ObliqueMotion obliqueMotion;
     [SerializeField] private GameObject departurePosition;
     [SerializeField] private GameObject arrivalPosition;
     [SerializeField] private GameObject projectile;
     [SerializeField] private GameObject pool;
     private int _instantiateCount = 0;
-    private List<GameObject> _projectilePool = new List<GameObject>();
+    private readonly List<GameObject> _projectilePool = new List<GameObject>();
     private int _projectileCount = 16;
     private int _counter = 0;
 
@@ -23,7 +22,6 @@ public class SimulationManager : MonoBehaviour
     private void Update()
     {
         MouseInput();
-        GetActiveProjectiles();
     }
 
     private void CreateProjectilePool()
@@ -34,6 +32,7 @@ public class SimulationManager : MonoBehaviour
             projectile = Instantiate(projectile, pool.transform.position, Quaternion.identity);
             projectile.transform.SetParent(pool.transform);
             projectile.transform.position = pool.transform.position;
+            projectile.transform.name = "Projectile";
             _projectilePool.Add(projectile);
         }
     }
@@ -69,7 +68,7 @@ public class SimulationManager : MonoBehaviour
                     GameObject projectile = _projectilePool[_counter].gameObject;
                     projectile.SetActive(true);
                     _counter++;
-                    if (_counter == 16)
+                    if (_counter == 16 && GetActiveProjectiles() == 16)
                     {
                         ExtendPool();
                     }
@@ -90,25 +89,34 @@ public class SimulationManager : MonoBehaviour
 
     private void ExtendPool()
     {
+        _projectileCount = 24;
         for (int i = 0; i < 8; i++)
         {
             projectile = Instantiate(projectile, pool.transform.position, Quaternion.identity);
             projectile.transform.SetParent(pool.transform);
             projectile.transform.position = pool.transform.position;
+            projectile.transform.name = "Projectile";
             projectile.SetActive(false);
             _projectilePool.Add(projectile);
         }
     }
 
-    private void GetActiveProjectiles()
+    public int GetActiveProjectiles()
     {
-        foreach (var item in _projectilePool)
+        int activeCount = 0;
+        foreach (GameObject activeProjectile in _projectilePool)
         {
-            if (item.activeSelf)
+            if (activeProjectile.gameObject.activeSelf)
             {
-                Debug.Log(item.name);
+                activeCount++;
             }
         }
+        return activeCount;
+    }
+    
+    public int GetPoolCount()
+    {
+        return _projectileCount;
     }
 
     public Vector3 GetDeparturePosition()
