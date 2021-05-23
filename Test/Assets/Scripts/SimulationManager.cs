@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SimulationManager : MonoBehaviour
 {
-    [SerializeField] private GameObject _departurePosition;
-    [SerializeField] private GameObject _arrivalPosition;
-    [SerializeField] private GameObject _projectile;
+    [SerializeField] private GameObject departurePosition;
+    [SerializeField] private GameObject arrivalPosition;
+    [SerializeField] private GameObject projectile;
     private int _instantiateCount = 0;
     private bool _instantiatable = true;
 
@@ -25,9 +23,9 @@ public class SimulationManager : MonoBehaviour
             {
                 if (hit)
                 {
-                    _departurePosition = Instantiate(_departurePosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z), Quaternion.identity) as GameObject;
-                    _projectile = Instantiate(_projectile, _departurePosition.transform.position, Quaternion.identity);
-                    _projectile.SetActive(false);
+                    departurePosition = Instantiate(departurePosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z), Quaternion.identity) as GameObject;
+                    projectile = Instantiate(projectile, departurePosition.transform.position, Quaternion.identity);
+                    projectile.SetActive(false);
                     _instantiateCount += 1;
                 }
             }
@@ -35,8 +33,8 @@ public class SimulationManager : MonoBehaviour
             {
                 if (hit)
                 {
-                    _arrivalPosition = Instantiate(_arrivalPosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z), Quaternion.identity) as GameObject;
-                    _projectile.SetActive(true);
+                    arrivalPosition = Instantiate(arrivalPosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z), Quaternion.identity) as GameObject;
+                    projectile.SetActive(true);
                     _instantiateCount = 0;
                     _instantiatable = false;
                 }
@@ -46,16 +44,16 @@ public class SimulationManager : MonoBehaviour
 
     public Vector3 GetDeparturePosition()
     {
-        return _departurePosition.transform.position;
+        return departurePosition.transform.position;
     }
     
     public Vector3 GetArrivalPosition()
     {
-        return _arrivalPosition.transform.position;
+        return arrivalPosition.transform.position;
     }
 
     public Vector3 GetProjectilePosition()
     {
-        return _projectile.transform.position;
+        return projectile.transform.position;
     }
 }

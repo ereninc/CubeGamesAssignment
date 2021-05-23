@@ -593,6 +593,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: SimulationManager
       objectReference: {fileID: 0}
+    - target: {fileID: 1738751719104617355, guid: 02d9a43a710d8b842b2b81d20f77f2a7,
+        type: 3}
+      propertyPath: projectile
+      value: 
+      objectReference: {fileID: 5113679630225295860, guid: 1413f789ed429b34ea1682429e978ee3,
+        type: 3}
+    - target: {fileID: 1738751719104617355, guid: 02d9a43a710d8b842b2b81d20f77f2a7,
+        type: 3}
+      propertyPath: arrivalPosition
+      value: 
+      objectReference: {fileID: 7268226232914250323, guid: 6e50c7f1cb230e442a2b0d0e4d8b9489,
+        type: 3}
+    - target: {fileID: 1738751719104617355, guid: 02d9a43a710d8b842b2b81d20f77f2a7,
+        type: 3}
+      propertyPath: departurePosition
+      value: 
+      objectReference: {fileID: 5713272385994579405, guid: da826685cb9cf12488b0bd3bb5909c13,
+        type: 3}
     - target: {fileID: 1738751719104617356, guid: 02d9a43a710d8b842b2b81d20f77f2a7,
         type: 3}
       propertyPath: m_RootOrder
