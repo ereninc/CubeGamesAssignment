@@ -8,7 +8,6 @@ public class ObliqueMotion : MonoBehaviour
 {
     [SerializeField] private Transform departurePosition;
     [SerializeField] private Transform arrivalPosition;
-    [SerializeField] private float firingAngle = 45.0f;
     
     private const float Gravity = 9.8f;
     private float _targetDistance;
@@ -16,6 +15,7 @@ public class ObliqueMotion : MonoBehaviour
     private float _vX;
     private float _vY;
     private bool _isMoving = false;
+    private float _angle = 45.0f;
     
     public int speed = 0;
     public int hMax = 0;
@@ -47,18 +47,18 @@ public class ObliqueMotion : MonoBehaviour
     {
         yield return new WaitForSeconds(1.25f);
         transform.position = departurePosition.position + new Vector3(0, 0, 0);
-        _targetDistance = Vector3.Distance(transform.position, arrivalPosition.position);
-        _projectileVelocity = _targetDistance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / (Gravity * speed));
-        _vX = Mathf.Sqrt(_projectileVelocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad); 
-        _vY = Mathf.Sqrt(_projectileVelocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
-        float flightDuration = _targetDistance / _vX;
-        transform.rotation = Quaternion.LookRotation(new Vector3(arrivalPosition.position.x, arrivalPosition.position.y, arrivalPosition.position.z) - transform.position);
-        float elapseTime = 0;
-        while (elapseTime < flightDuration)
+        _targetDistance = Vector3.Distance(transform.position, arrivalPosition.position); //x
+        _projectileVelocity = _targetDistance / (Mathf.Sin(2 * _angle * Mathf.Deg2Rad) / (Gravity * speed)); //Vo
+        _vX = Mathf.Sqrt(_projectileVelocity) * Mathf.Cos(_angle * Mathf.Deg2Rad); //Vox
+        _vY = Mathf.Sqrt(_projectileVelocity) * Mathf.Sin(_angle * Mathf.Deg2Rad); //Voy
+        float flightDuration = _targetDistance / _vX; //tflight
+        transform.rotation = Quaternion.LookRotation(arrivalPosition.position - transform.position);
+        float deltaTime = 0;
+        while (deltaTime < flightDuration)
         {
             _isMoving = true;
-            transform.Translate(0, (_vY - (Gravity * speed) * elapseTime) * Time.deltaTime, _vX * Time.deltaTime);
-            elapseTime += Time.deltaTime;
+            transform.Translate(0, (_vY - (Gravity * speed) * deltaTime) * Time.deltaTime, _vX * Time.deltaTime);
+            deltaTime += Time.deltaTime;
             yield return null;
             _isMoving = false;
         }
