@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 //h = ((Vi)^2* sin^2 * Qi) / 2g
 
@@ -17,7 +19,7 @@ public class ObliqueMotion : MonoBehaviour
     private float _projectileVelocity;
     private float _vX;
     private float _vY;
-    public bool _isMoving = false;
+    public bool isMoving = false;
     public float _angle = 53.0f;
     
     private UIController uiController;
@@ -29,15 +31,21 @@ public class ObliqueMotion : MonoBehaviour
         FindDepartureTransform();
     }
 
+    private void Start()
+    {
+        GetDatasFromUI();
+        StartCoroutine(SimulateProjectile());
+    }
+
     private void Update()
     {
-        MouseInput();
+        //MouseInput();
         GetDatasFromUI();
     }
 
     private void MouseInput()
     {
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && !_isMoving)
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && !isMoving)
         {
             StartCoroutine(SimulateProjectile());
         }
@@ -55,11 +63,11 @@ public class ObliqueMotion : MonoBehaviour
         float deltaTime = 0;
         while (deltaTime < flightDuration)
         {
-            _isMoving = true;
+            isMoving = true;
             transform.Translate(0, (_vY - (Gravity * speed) * deltaTime) * Time.deltaTime, _vX * Time.deltaTime);
             deltaTime += Time.deltaTime;
             yield return null;
-            _isMoving = false;
+            isMoving = false;
         }
     }
 
@@ -77,7 +85,7 @@ public class ObliqueMotion : MonoBehaviour
 
     private void GetDatasFromUI()
     {
-        if (!_isMoving)
+        if (!isMoving)
         {
             hMax = uiController.uiHmax;
             speed = uiController.uiSpeed;

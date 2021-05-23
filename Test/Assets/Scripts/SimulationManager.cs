@@ -24,6 +24,8 @@ public class SimulationManager : MonoBehaviour
     private void Update()
     {
         MouseInput();
+        //ResetPool();
+        Debug.Log(_counter);
     }
 
     private void CreateProjectilePool()
@@ -40,31 +42,65 @@ public class SimulationManager : MonoBehaviour
 
     private void MouseInput()
     {
-        if (Input.GetMouseButtonDown(0) &&_instantiatable && _counter < 16)
+        if (Input.GetMouseButtonDown(0))
         {
-            RaycastHit hitInfo = new RaycastHit();
-            bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo);
-            if (_instantiateCount == 0)
+            if (_counter < 16)
             {
-                if (hit)
+                RaycastHit hitInfo = new RaycastHit();
+                bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo);
+                if (_instantiateCount == 0)
                 {
-                    departurePosition = Instantiate(departurePosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z), Quaternion.identity) as GameObject;
-                    pool.transform.position = departurePosition.transform.position;
+                    if (hit)
+                    {
+                        departurePosition = Instantiate(departurePosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z), Quaternion.identity) as GameObject;
+                        pool.transform.position = departurePosition.transform.position;
+                        _instantiateCount += 1;
+                    }
+                }
+                else if(_instantiateCount == 1)
+                {
+                    if (hit)
+                    {
+                        arrivalPosition = Instantiate(arrivalPosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z), Quaternion.identity) as GameObject;
+                        projectile.SetActive(true);
+                        _instantiateCount += 1;
+                    }
+                }
+                else
+                {
                     GameObject projectile = _projectilePool[_counter].gameObject;
-                    projectile.SetActive(false);
-                    _instantiateCount += 1;
+                    projectile.SetActive(true);
                     _counter++;
                 }
             }
+            else if (_counter == 16)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    projectile = Instantiate(projectile, pool.transform.position, Quaternion.identity);
+                    projectile.transform.SetParent(pool.transform);
+                    projectile.transform.position = pool.transform.position;
+                    _projectilePool.Add(projectile);
+                }
+                _counter++;
+            }
             else
             {
-                if (hit)
-                {
-                    arrivalPosition = Instantiate(arrivalPosition, new Vector3(hitInfo.point.x, hitInfo.point.y + 0.5f, hitInfo.point.z), Quaternion.identity) as GameObject;
-                    projectile.SetActive(true);
-                    _instantiateCount = 0;
-                    _instantiatable = false;
-                }
+                GameObject projectile = _projectilePool[_counter].gameObject;
+                projectile.SetActive(true);
+                _counter++;
+            }
+        }
+    }
+
+    private void ResetPool()
+    {
+        for (int i = 0; i < _projectileCount; i++)
+        {
+            if (!obliqueMotion.isMoving)
+            {
+                _projectilePool[i].SetActive(false);
+                _projectilePool[i].transform.position = pool.transform.position;
             }
         }
     }
