@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Departure
   - Arrival
+  - Projectile
   layers:
   - Default
   - TransparentFX

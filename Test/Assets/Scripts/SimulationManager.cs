@@ -1,31 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SimulationManager : MonoBehaviour
 {
-    private ObliqueMotion obliqueMotion;
+    [SerializeField] private ObliqueMotion obliqueMotion;
     [SerializeField] private GameObject departurePosition;
     [SerializeField] private GameObject arrivalPosition;
     [SerializeField] private GameObject projectile;
     [SerializeField] private GameObject pool;
     private int _instantiateCount = 0;
-    private bool _instantiatable = true;
     private List<GameObject> _projectilePool = new List<GameObject>();
     private int _projectileCount = 16;
     private int _counter = 0;
 
     private void Awake()
     {
-        obliqueMotion = FindObjectOfType<ObliqueMotion>();
         CreateProjectilePool();
     }
 
     private void Update()
     {
         MouseInput();
-        //ResetPool();
-        Debug.Log(_counter);
+        GetActiveProjectiles();
     }
 
     private void CreateProjectilePool()
@@ -42,7 +40,7 @@ public class SimulationManager : MonoBehaviour
 
     private void MouseInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             if (_counter < 16)
             {
@@ -71,36 +69,44 @@ public class SimulationManager : MonoBehaviour
                     GameObject projectile = _projectilePool[_counter].gameObject;
                     projectile.SetActive(true);
                     _counter++;
+                    if (_counter == 16)
+                    {
+                        ExtendPool();
+                    }
                 }
-            }
-            else if (_counter == 16)
-            {
-                for (int i = 0; i < 8; i++)
-                {
-                    projectile = Instantiate(projectile, pool.transform.position, Quaternion.identity);
-                    projectile.transform.SetParent(pool.transform);
-                    projectile.transform.position = pool.transform.position;
-                    _projectilePool.Add(projectile);
-                }
-                _counter++;
             }
             else
             {
                 GameObject projectile = _projectilePool[_counter].gameObject;
                 projectile.SetActive(true);
                 _counter++;
+                if (_counter==24)
+                {
+                    _counter = 0;
+                }
             }
         }
     }
 
-    private void ResetPool()
+    private void ExtendPool()
     {
-        for (int i = 0; i < _projectileCount; i++)
+        for (int i = 0; i < 8; i++)
         {
-            if (!obliqueMotion.isMoving)
+            projectile = Instantiate(projectile, pool.transform.position, Quaternion.identity);
+            projectile.transform.SetParent(pool.transform);
+            projectile.transform.position = pool.transform.position;
+            projectile.SetActive(false);
+            _projectilePool.Add(projectile);
+        }
+    }
+
+    private void GetActiveProjectiles()
+    {
+        foreach (var item in _projectilePool)
+        {
+            if (item.activeSelf)
             {
-                _projectilePool[i].SetActive(false);
-                _projectilePool[i].transform.position = pool.transform.position;
+                Debug.Log(item.name);
             }
         }
     }
