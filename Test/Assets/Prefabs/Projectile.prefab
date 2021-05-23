@@ -96,8 +96,6 @@ MonoBehaviour:
     type: 3}
   arrivalPosition: {fileID: 7268226232914250327, guid: 6e50c7f1cb230e442a2b0d0e4d8b9489,
     type: 3}
+  speed: 0
   hMax: 10
-  firingAngle: 45
-  gravity: 9.8
-  _uiController: {fileID: 3073403776029761887, guid: 5ee9afd98bbff744c937c0a6b84a9803,
-    type: 3}
+  _angle: 53

@@ -9,16 +9,16 @@ public class ObliqueMotion : MonoBehaviour
     [SerializeField] private Transform departurePosition;
     [SerializeField] private Transform arrivalPosition;
     
+    public int speed = 0;
+    public int hMax = 0;
+    
     private const float Gravity = 9.8f;
-    private float _targetDistance;
+    private float _distance;
     private float _projectileVelocity;
     private float _vX;
     private float _vY;
-    private bool _isMoving = false;
-    private float _angle = 45.0f;
-    
-    public int speed = 0;
-    public int hMax = 0;
+    public bool _isMoving = false;
+    public float _angle = 53.0f;
     
     private UIController uiController;
 
@@ -37,7 +37,7 @@ public class ObliqueMotion : MonoBehaviour
 
     private void MouseInput()
     {
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && !_isMoving)
         {
             StartCoroutine(SimulateProjectile());
         }
@@ -45,13 +45,12 @@ public class ObliqueMotion : MonoBehaviour
 
     IEnumerator SimulateProjectile()
     {
-        yield return new WaitForSeconds(1.25f);
-        transform.position = departurePosition.position + new Vector3(0, 0, 0);
-        _targetDistance = Vector3.Distance(transform.position, arrivalPosition.position); //x
-        _projectileVelocity = _targetDistance / (Mathf.Sin(2 * _angle * Mathf.Deg2Rad) / (Gravity * speed)); //Vo
+        transform.position = departurePosition.position + new Vector3(0, 0, 0); //Xo, Yo, Zo
+        _distance = Vector3.Distance(transform.position, arrivalPosition.position); //X1, Y1, Z1
+        _projectileVelocity = _distance / (Mathf.Sin(2 * _angle * Mathf.Deg2Rad) / (Gravity * speed)); //Vo
         _vX = Mathf.Sqrt(_projectileVelocity) * Mathf.Cos(_angle * Mathf.Deg2Rad); //Vox
         _vY = Mathf.Sqrt(_projectileVelocity) * Mathf.Sin(_angle * Mathf.Deg2Rad); //Voy
-        float flightDuration = _targetDistance / _vX; //tflight
+        float flightDuration = _distance / _vX; //Tflight
         transform.rotation = Quaternion.LookRotation(arrivalPosition.position - transform.position);
         float deltaTime = 0;
         while (deltaTime < flightDuration)
