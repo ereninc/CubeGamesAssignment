@@ -1,8 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 
 //h = ((Vi)^2* sin^2 * Qi) / 2g
 
@@ -10,25 +7,22 @@ public class ObliqueMotion : MonoBehaviour
 {
     [SerializeField] private Transform departurePosition;
     [SerializeField] private Transform arrivalPosition;
-    
-    public int speed = 0;
-    public int hMax = 0;
-    
     private const float Gravity = 9.8f;
     private float _distance;
     private float _projectileVelocity;
     private float _vX;
     private float _vY;
-    private UIController uiController;
-    
-    public bool isMoving = false;
-    public float _angle = 53.0f;
+    private float _angle = 53.0f;
     private bool _isFinished = false;
     
+    private UIController _uiController;
+    public int speed = 0;
+    public int hMax = 0;
+    public bool isMoving = false;
 
     private void Awake()
     {
-        uiController = GameObject.FindObjectOfType<UIController>();
+        _uiController = GameObject.FindObjectOfType<UIController>();
         FindArrivalTransform();
         FindDepartureTransform();
     }
@@ -37,17 +31,19 @@ public class ObliqueMotion : MonoBehaviour
     {
         Init();
     }
-
-    private void Init()
-    {
-        GetDatasFromUI();
-        StartCoroutine(SimulateProjectile());
-    }
-
+    
     private void Update()
     {
         GetDatasFromUI();
         ResetPosition();
+    }
+    
+    private void Init()
+    {
+        GetDatasFromUI();
+        StartCoroutine(SimulateProjectile());
+        _isFinished = false;
+        isMoving = false;
     }
 
     IEnumerator SimulateProjectile()
@@ -55,14 +51,30 @@ public class ObliqueMotion : MonoBehaviour
         for (;;)
         {
             yield return new WaitForSeconds(0.25f);
-            _isFinished = false;
-            transform.position = departurePosition.position + new Vector3(0, 0, 0); //Xo, Yo, Zo
-            _distance = Vector3.Distance(transform.position, arrivalPosition.position); //X1, Y1, Z1
+            var projectilePos = transform.position;
+            projectilePos = departurePosition.position + new Vector3(0, 0, 0); //Xo, Yo, Zo
+            transform.position = projectilePos;
+            var position = arrivalPosition.position;
+            _distance = Vector3.Distance(projectilePos, position); //X1, Y1, Z1
+            
             _projectileVelocity = _distance / (Mathf.Sin(2 * _angle * Mathf.Deg2Rad) / (Gravity * speed)); //Vo
             _vX = Mathf.Sqrt(_projectileVelocity) * Mathf.Cos(_angle * Mathf.Deg2Rad); //Vox
             _vY = Mathf.Sqrt(_projectileVelocity) * Mathf.Sin(_angle * Mathf.Deg2Rad); //Voy
+
+            /*float hm = (_projectileVelocity * _projectileVelocity) * Mathf.Sin(2 * _angle * Mathf.Deg2Rad) / (2 * Gravity);
+            Debug.Log(hm);
+            /*_projectileVelocity = 20;
+            _angle = 40;
+            _vX = 20 * Mathf.Cos(40 * Mathf.Deg2Rad);
+            Debug.Log(_vX);
+
+            _vY = 20 * Mathf.Sin(40 * Mathf.Deg2Rad);
+            Debug.Log(_vY);
+            float hm = ((_vY) * (_vY)) / (2 * (Gravity));
+            Debug.Log(hm);*/
+
             float flightDuration = _distance / _vX; //Tflight
-            transform.rotation = Quaternion.LookRotation(arrivalPosition.position - transform.position);
+            transform.rotation = Quaternion.LookRotation(position - projectilePos);
             float deltaTime = 0;
             while (deltaTime < flightDuration)
             {
@@ -81,12 +93,9 @@ public class ObliqueMotion : MonoBehaviour
     {
         if (_isFinished)
         {
-            //transform.gameObject.SetActive(false);
             transform.position = departurePosition.position;
             isMoving = false;
         }
-        _isFinished = true;
-        isMoving = true;
     }
 
     private Transform FindArrivalTransform()
@@ -105,8 +114,10 @@ public class ObliqueMotion : MonoBehaviour
     {
         if (!isMoving)
         {
-            hMax = uiController.uiHmax;
-            speed = uiController.uiSpeed;
+            hMax = _uiController.uiHmax;
+            _angle = hMax * 4.5f;
+            if (_angle >= 70) _angle = 45;
+            speed = _uiController.uiSpeed;
         }
     }
 }

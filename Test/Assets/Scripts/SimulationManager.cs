@@ -13,6 +13,7 @@ public class SimulationManager : MonoBehaviour
     private readonly List<GameObject> _projectilePool = new List<GameObject>();
     private int _projectileCount = 16;
     private int _counter = 0;
+    private int _destroyCounter = 0;
 
     private void Awake()
     {
@@ -65,25 +66,50 @@ public class SimulationManager : MonoBehaviour
                 }
                 else
                 {
-                    GameObject projectile = _projectilePool[_counter].gameObject;
-                    projectile.SetActive(true);
-                    _counter++;
-                    if (_counter == 16 && GetActiveProjectiles() == 16)
+                    if (!_projectilePool[_counter].activeSelf)
                     {
-                        ExtendPool();
+                        GameObject projectile = _projectilePool[_counter].gameObject;
+                        projectile.SetActive(true);
+                        _counter++;
+                        if (_counter == 16 && GetActiveProjectiles() == 16)
+                        {
+                            ExtendPool();
+                        }
                     }
+                    else
+                    {
+                        _counter++;
+                    }
+                    
                 }
             }
             else
             {
-                GameObject projectile = _projectilePool[_counter].gameObject;
-                projectile.SetActive(true);
-                _counter++;
-                if (_counter==24)
+                if (!_projectilePool[_counter].activeSelf)
                 {
-                    _counter = 0;
+                    GameObject projectile = _projectilePool[_counter].gameObject;
+                    projectile.SetActive(true);
+                    _counter++;
+                    if (_counter == 24)
+                    {
+                        _counter = 0;
+                    }
+                }
+                else
+                {
+                    _counter++;
                 }
             }
+        }
+
+        
+        if (Input.GetMouseButtonDown(1))
+        {
+            GameObject pooledObject = _projectilePool[_destroyCounter];
+            pooledObject.transform.position = pool.transform.position;
+            pooledObject.SetActive(false);
+            _destroyCounter++;
+            _counter = 0;
         }
     }
 
