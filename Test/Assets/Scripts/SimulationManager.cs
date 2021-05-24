@@ -23,6 +23,8 @@ public class SimulationManager : MonoBehaviour
     private void Update()
     {
         MouseInput();
+        /*Debug.Log("Counter : " + _counter);
+        Debug.Log("DestroyCounter : " + _destroyCounter);*/
     }
 
     private void CreateProjectilePool()
@@ -76,11 +78,6 @@ public class SimulationManager : MonoBehaviour
                             ExtendPool();
                         }
                     }
-                    else
-                    {
-                        _counter++;
-                    }
-                    
                 }
             }
             else
@@ -95,10 +92,6 @@ public class SimulationManager : MonoBehaviour
                         _counter = 0;
                     }
                 }
-                else
-                {
-                    _counter++;
-                }
             }
         }
 
@@ -109,6 +102,10 @@ public class SimulationManager : MonoBehaviour
             pooledObject.transform.position = pool.transform.position;
             pooledObject.SetActive(false);
             _destroyCounter++;
+            if (_destroyCounter == 16)
+            {
+                _destroyCounter = 0;
+            }
             _counter = 0;
         }
     }

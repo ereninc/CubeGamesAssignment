@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 //h = ((Vi)^2* sin^2 * Qi) / 2g
@@ -41,7 +42,7 @@ public class ObliqueMotion : MonoBehaviour
     private void Init()
     {
         GetDatasFromUI();
-        StartCoroutine(SimulateProjectile());
+        //StartCoroutine(SimulateProjectile());
         _isFinished = false;
         isMoving = false;
     }
@@ -119,5 +120,15 @@ public class ObliqueMotion : MonoBehaviour
             if (_angle >= 70) _angle = 45;
             speed = _uiController.uiSpeed;
         }
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine(SimulateProjectile());
+    }
+
+    private void OnDisable()
+    {
+        gameObject.SetActive(false);
     }
 }
