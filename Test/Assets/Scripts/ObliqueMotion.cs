@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 //h = ((Vi)^2* sin^2 * Qi) / 2g
@@ -42,12 +41,11 @@ public class ObliqueMotion : MonoBehaviour
     private void Init()
     {
         GetDatasFromUI();
-        //StartCoroutine(SimulateProjectile());
         _isFinished = false;
         isMoving = false;
     }
 
-    IEnumerator SimulateProjectile()
+    IEnumerator ThrowProjectile()
     {
         for (;;)
         {
@@ -59,8 +57,8 @@ public class ObliqueMotion : MonoBehaviour
             _distance = Vector3.Distance(projectilePos, position); //X1, Y1, Z1
             
             _projectileVelocity = _distance / (Mathf.Sin(2 * _angle * Mathf.Deg2Rad) / (Gravity * speed)); //Vo
-            _vX = Mathf.Sqrt(_projectileVelocity) * Mathf.Cos(_angle * Mathf.Deg2Rad); //Vox
-            _vY = Mathf.Sqrt(_projectileVelocity) * Mathf.Sin(_angle * Mathf.Deg2Rad); //Voy
+            _vX = Mathf.Sqrt(_projectileVelocity) * Mathf.Cos(_angle * Mathf.Deg2Rad); //Vox = Vo * CosQ
+            _vY = Mathf.Sqrt(_projectileVelocity) * Mathf.Sin(_angle * Mathf.Deg2Rad); //Voy = Vo * SinQ
 
             /*float hm = (_projectileVelocity * _projectileVelocity) * Mathf.Sin(2 * _angle * Mathf.Deg2Rad) / (2 * Gravity);
             Debug.Log(hm);
@@ -68,7 +66,6 @@ public class ObliqueMotion : MonoBehaviour
             _angle = 40;
             _vX = 20 * Mathf.Cos(40 * Mathf.Deg2Rad);
             Debug.Log(_vX);
-
             _vY = 20 * Mathf.Sin(40 * Mathf.Deg2Rad);
             Debug.Log(_vY);
             float hm = ((_vY) * (_vY)) / (2 * (Gravity));
@@ -124,7 +121,7 @@ public class ObliqueMotion : MonoBehaviour
 
     private void OnEnable()
     {
-        StartCoroutine(SimulateProjectile());
+        StartCoroutine(ThrowProjectile());
     }
 
     private void OnDisable()

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -23,8 +22,6 @@ public class SimulationManager : MonoBehaviour
     private void Update()
     {
         MouseInput();
-        /*Debug.Log("Counter : " + _counter);
-        Debug.Log("DestroyCounter : " + _destroyCounter);*/
     }
 
     private void CreateProjectilePool()
@@ -94,9 +91,8 @@ public class SimulationManager : MonoBehaviour
                 }
             }
         }
-
         
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
         {
             GameObject pooledObject = _projectilePool[_destroyCounter];
             pooledObject.transform.position = pool.transform.position;
